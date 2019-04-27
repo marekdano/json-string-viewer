@@ -3,13 +3,16 @@ import './App.css';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </header>
-    </div>
+    <main>
+      <h2>JSON string validator and viewer <span>- paste JSON string to the left panel to see the result in the right one</span></h2>
+      <section>
+        <textarea id="jsonInput" placeholder="Enter JSON string"></textarea>
+        <section className="action-buttons">
+          <input id="generalJSON" type="buton" value="Validate & Prettify JSON string" />
+        </section>
+        <textarea id="convertedJSON"></textarea>
+      </section>
+    </main>
   );
 }
 
