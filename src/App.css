@@ -22,7 +22,7 @@ main section {
   max-width: 17rem;
 }
 
-.action-buttons input {
+.action-buttons button {
   padding: .4rem;
   margin: 1rem;
   font-size: .9rem;

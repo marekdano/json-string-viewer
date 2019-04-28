@@ -8,7 +8,7 @@ const App: React.FC = () => {
       <section>
         <textarea id="jsonInput" placeholder="Enter JSON string"></textarea>
         <section className="action-buttons">
-          <input id="generalJSON" type="buton" value="Validate & Prettify JSON string" />
+          <button id="generalJSON">Validate & Prettify JSON string</button>
         </section>
         <textarea id="convertedJSON"></textarea>
       </section>
