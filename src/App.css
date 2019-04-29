@@ -4,6 +4,15 @@ main {
   margin: 0 1rem;
 }
 
+main h2 {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.subtitle {
+  font-size: 1rem;
+}
+
 section textarea {
   flex: auto;
 }
@@ -18,14 +27,24 @@ main section {
 .action-buttons {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  max-width: 17rem;
+  max-width: 12rem;
 }
 
 .action-buttons button {
   padding: .4rem;
   margin: 1rem;
   font-size: .9rem;
-  border: solid 2px darkblue;
+  border: solid 3px white;
   text-align: center;
+  border-radius: 3px;
+  color: #ffffff;
+  font-weight: 700;
+  background: transparent;
+  cursor: pointer;
+}
+
+.action-buttons button:focus, .action-buttons button:hover {
+  color: #15BC9B;
+  background: #ffffff;
+  outline: 0;
 }
