@@ -14,10 +14,6 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
   private jsoneditor: any;
   private container: any;
 
-  constructor(props: JSONEditorAreaProps) {
-    super(props);
-  }
-
   componentDidMount () {
     const options: JSONEditorOptions = {
       "mode": "code",
