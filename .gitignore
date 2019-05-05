@@ -2,6 +2,10 @@ node_modules
 coverage
 dist
 
+# cypress
+cypress/videos
+cypress/screenshots
+
 yarn-error.log
 
 # these cause more harm than good
