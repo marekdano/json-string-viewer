@@ -5,6 +5,7 @@ dist
 # cypress
 cypress/videos
 cypress/screenshots
+cypress/integration/examples
 
 yarn-error.log
 
