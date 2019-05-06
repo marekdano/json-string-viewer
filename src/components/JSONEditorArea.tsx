@@ -7,7 +7,8 @@ interface JSON {
   [key: string]: any; 
 }
 interface JSONEditorAreaProps {
-  json: JSON;
+  json: JSON | string;
+  onChangeJson: (value: string) => void;
 }
 
 class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
@@ -19,6 +20,13 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
       "mode": "code",
       "indentation": 2,
       "mainMenuBar": true,
+      onChange: () => {
+        // get() can throw an exception in mode "code", when the editor contains invalid JSON
+        try {
+          this.props.onChangeJson(this.jsoneditor.get());
+        } 
+        finally {}
+      }
     };
 
     this.jsoneditor = new JSONEditor(this.container, options) as JSONEditor;
