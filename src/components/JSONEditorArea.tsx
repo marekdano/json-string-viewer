@@ -8,6 +8,7 @@ interface JSON {
 }
 interface JSONEditorAreaProps {
   json: JSON | string;
+  type: 'input' | 'output';
   onChangeJson: (value: string) => void;
 }
 
@@ -30,7 +31,9 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
     };
 
     this.jsoneditor = new JSONEditor(this.container, options) as JSONEditor;
-    this.jsoneditor.set(this.props.json);
+    if (this.props.json) {
+      this.jsoneditor.set(this.props.json);
+    }
   }
 
   componentWillUnmount () {
@@ -45,7 +48,7 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
 
   render() {
     return (
-      <div className="jsoneditor-container" ref={elem => this.container = elem as HTMLDivElement} />
+      <div className="jsoneditor-container" ref={elem => {this.container = elem}} id={this.props.type}/>
     );
   }
 }
