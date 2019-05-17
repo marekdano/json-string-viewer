@@ -7,14 +7,15 @@ interface JSON {
   [key: string]: any; 
 }
 interface JSONEditorAreaProps {
-  json: JSON | string;
+  json: JSON | string | null;
   type: 'input' | 'output';
-  onChangeJson: (value: string) => void;
+  isValidJSON?: boolean;
+  onChangeJson: (value: string | null, error: string | null) => void;
 }
 
 class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
-  private jsoneditor: any;
-  private container: any;
+  private jsoneditor: JSONEditor | undefined;
+  private container: HTMLDivElement | undefined;
 
   componentDidMount () {
     const options: JSONEditorOptions = {
@@ -23,17 +24,20 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
       "mainMenuBar": true,
       onChange: () => {
         // get() can throw an exception in mode "code", when the editor contains invalid JSON
+        const editor = this.jsoneditor as JSONEditor;
         try {
-          this.props.onChangeJson(this.jsoneditor.get());
-        } 
-        finally {}
+          this.props.onChangeJson(editor.get(), null);
+        } catch (err) {
+          this.props.onChangeJson(null, err.toString())
+          console.log(editor.getText())
+          console.log(err.toString())
+        }
       }
     };
 
-    this.jsoneditor = new JSONEditor(this.container, options) as JSONEditor;
-    if (this.props.json) {
-      this.jsoneditor.set(this.props.json);
-    }
+    this.jsoneditor = new JSONEditor(this.container as HTMLDivElement, options) as JSONEditor;
+    const emptyString = !this.props.json ? '' : this.props.json;
+    this.jsoneditor.setText(emptyString as string);
   }
 
   componentWillUnmount () {
@@ -43,12 +47,14 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
   }
 
   componentWillUpdate(nextProps: JSONEditorAreaProps) {
-    this.jsoneditor.update(nextProps.json);
+    if (nextProps.json && nextProps.isValidJSON) { 
+      (this.jsoneditor as JSONEditor).update(nextProps.json);
+    }    
   }
 
   render() {
     return (
-      <div className="jsoneditor-container" ref={elem => {this.container = elem}} id={this.props.type}/>
+      <div className="jsoneditor-container" ref={elem => {this.container = elem as HTMLDivElement}} id={this.props.type}/>
     );
   }
 }
