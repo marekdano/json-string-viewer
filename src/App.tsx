@@ -3,22 +3,26 @@ import './App.css';
 import JSONEditorArea from './components/JSONEditorArea';
 import parseJsonString from './utils/parseJsonString';
 
-const defaultJSON = '';
-
 const App: React.FC = () => {
-  const [jsonString, setJsonString] = useState(defaultJSON);
-  const [jsonOutput, setJsonOutput] = useState();
+  const [jsonValidString, setJsonValidString] = useState();
+  const [output, setOutput] = useState();
+  const [error, setError] = useState();
 
-  const onChangeJsonString = (value: string) => {
-    setJsonString(value);
+  const onChangeJsonString = (value: string | null, error: string | null) => {
+    if (value && !error) {
+      setJsonValidString(value);
+    }
+    setError(error);
   }
 
   const onJsonValidation = () => {
-    const result = parseJsonString(jsonString);
+    const result = parseJsonString(jsonValidString);
     if ('error' in result && result.error) {
-      setJsonOutput(result.errorMessage);
+      setOutput(result.errorMessage);
+    } else if (error) { 
+      setOutput(error);
     } else {
-      setJsonOutput(result);
+      setOutput(result);
     }
   }
 
@@ -26,11 +30,11 @@ const App: React.FC = () => {
     <main>
       <h2>JSON string Viewer<span className="subtitle"> - paste JSON string to the left panel to see the result in the right one</span></h2>
       <section>
-        <JSONEditorArea json={jsonString} type='input' onChangeJson={onChangeJsonString} />
+        <JSONEditorArea json={jsonValidString} isValidJSON={!error} type='input' onChangeJson={onChangeJsonString} />
         <section className="action-buttons">
           <button id="generalJSON" onClick={onJsonValidation}>Validate & Prettify JSON string</button>
         </section>
-        <JSONEditorArea json={!jsonOutput ? '' : jsonOutput} type='output' onChangeJson={() => {}} />
+        <JSONEditorArea json={output} isValidJSON={true} type='output' onChangeJson={() => {}} />
       </section>
     </main>
   );

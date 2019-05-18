@@ -29,8 +29,6 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
           this.props.onChangeJson(editor.get(), null);
         } catch (err) {
           this.props.onChangeJson(null, err.toString())
-          console.log(editor.getText())
-          console.log(err.toString())
         }
       }
     };
