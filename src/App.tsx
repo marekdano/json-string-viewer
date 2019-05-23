@@ -34,7 +34,7 @@ const App: React.FC = () => {
         <section className="action-buttons">
           <button id="generalJSON" onClick={onJsonValidation}>Validate & Prettify JSON string</button>
         </section>
-        <JSONEditorArea json={output} isValidJSON={true} type='output' onChangeJson={() => {}} />
+        <JSONEditorArea json={output} isValidJSON={true} type='output' />
       </section>
     </main>
   );

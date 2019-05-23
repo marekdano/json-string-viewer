@@ -10,7 +10,7 @@ interface JSONEditorAreaProps {
   json: JSON | string | null;
   type: 'input' | 'output';
   isValidJSON?: boolean;
-  onChangeJson: (value: string | null, error: string | null) => void;
+  onChangeJson?: (value: string | null, error: string | null) => void;
 }
 
 class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
@@ -26,9 +26,9 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
         // get() can throw an exception in mode "code", when the editor contains invalid JSON
         const editor = this.jsoneditor as JSONEditor;
         try {
-          this.props.onChangeJson(editor.get(), null);
+          this.props.onChangeJson && this.props.onChangeJson(editor.get(), null);
         } catch (err) {
-          this.props.onChangeJson(null, err.toString())
+          this.props.onChangeJson && this.props.onChangeJson(null, err.toString());
         }
       }
     };
