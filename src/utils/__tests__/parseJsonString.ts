@@ -1,4 +1,4 @@
-import parseJsonString, {ParsedJSONError} from './parseJsonString';
+import parseJsonString, {ParsedJSONError} from '../parseJsonString';
 
 test('parseJonString should return JSON Object when parsing a valid JSON string', () => {
   const jsonString = "{\"name\": \"Marek\"}";
