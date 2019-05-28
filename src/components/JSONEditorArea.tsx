@@ -7,7 +7,7 @@ interface JSON {
   [key: string]: any; 
 }
 interface JSONEditorAreaProps {
-  json: JSON | string | null;
+  data: JSON | string | null;
   type: 'input' | 'output';
   isValidJSON?: boolean;
   onChangeJson?: (value: string | null, error: string | null) => void;
@@ -34,19 +34,17 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
     };
 
     this.jsoneditor = new JSONEditor(this.container as HTMLDivElement, options) as JSONEditor;
-    const emptyString = !this.props.json ? '' : this.props.json;
-    this.jsoneditor.setText(emptyString as string);
+    const jsonString = !this.props.data ? '' : this.props.data;
+    this.jsoneditor.setText(jsonString as string);
   }
 
   componentWillUnmount () {
-    if (this.jsoneditor) {
-      this.jsoneditor.destroy();
-    }
+    this.jsoneditor && this.jsoneditor.destroy();
   }
 
   componentWillUpdate(nextProps: JSONEditorAreaProps) {
-    if (nextProps.json && nextProps.isValidJSON) { 
-      (this.jsoneditor as JSONEditor).update(nextProps.json);
+    if (nextProps.data && nextProps.isValidJSON) { 
+      (this.jsoneditor as JSONEditor).update(nextProps.data);
     }    
   }
 
