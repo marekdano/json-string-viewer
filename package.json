@@ -18,8 +18,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "test:coverage": "npm run test -- --watchAll false --coverage"
+    "test:coverage": "npm run test -- --watchAll=false --coverage",
+    "cy:run": "npx cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"
