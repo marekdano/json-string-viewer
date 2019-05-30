@@ -14,11 +14,11 @@ export const parseJsonString = (value: string): Object | ParsedJSONError => {
   }
 }
 
-export const validateJSON = (jsonValidString: string): Object | ParsedJSONError => {
+export const validateJSON = (jsonValidString: string): string => {
   const result = parseJsonString(jsonValidString);
   if ('error' in result && result.error) {
     return result.errorMessage;
   } else {
-    return result;
+    return result as string;
   }
 }

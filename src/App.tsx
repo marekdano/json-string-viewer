@@ -1,40 +1,30 @@
 import React, { useState } from 'react';
 import './App.css';
-import JSONEditorArea from './components/JSONEditorArea';
-import parseJsonString from './utils/parseJsonString';
+import JSONEditorArea, { ParseError } from './components/JSONEditorArea';
+import { validateJSON } from './utils/json-utils';
 
-const validateJSON = ({ jsonValidString, error }: {jsonValidString: string, error: string}) => {
-  const result = parseJsonString(jsonValidString);
-  if ('error' in result && result.error) {
-    return result.errorMessage;
-  } else if (error) { 
-    return error;
-  } else {
-    return result;
-  }
-}
 
 const App: React.FC = () => {
-  const [jsonValidString, setJsonValidString] = useState();
-  const [output, setOutput] = useState();
-  const [error, setError] = useState();
+  const [jsonValidString, setJsonValidString] = useState<string>();
+  const [output, setOutput] = useState<string>();
+  const [error, setError] = useState<ParseError | null | string>();
 
-  const onChangeJsonString = (value: string | null, error: string | null) => {
+  const onChangeJsonString = (value: string | null, error: string | ParseError | null) => {
     if ((value || value === '') && !error) {
-      setJsonValidString(value);
+      setJsonValidString(value as string);
     }
     setError(error);
   }
 
   const onJsonValidation = () => {
-    setOutput(validateJSON({jsonValidString, error}));
+    setOutput(error ? (error as ParseError).message : validateJSON(jsonValidString as string));
   }
 
   return (
     <main>
       <h2>JSON string Viewer<span className="subtitle"> - paste JSON string to the left panel to see the result in the right one</span></h2>
       <section>
-        <JSONEditorArea data={jsonValidString} isValidJSON={!error} type='input' onChangeJson={onChangeJsonString} />
+        <JSONEditorArea isValidJSON={!error} type='input' onChangeJson={onChangeJsonString} />
         <section className="action-buttons">
           <button id="generalJSON" onClick={onJsonValidation}>Validate & Prettify JSON string</button>
         </section>

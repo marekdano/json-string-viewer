@@ -3,14 +3,16 @@ import JSONEditor, { JSONEditorOptions } from 'jsoneditor';
 import 'jsoneditor/dist/jsoneditor.css';
 import './JSONEditorArea.css';
 
+export type ParseError = {message: string};
+
 interface JSON {
   [key: string]: any; 
 }
 interface JSONEditorAreaProps {
-  data: JSON | string | null;
   type: 'input' | 'output';
   isValidJSON?: boolean;
-  onChangeJson?: (value: string | null, error: string | null) => void;
+  data?: string | null;
+  onChangeJson?: (value: string | null, error: string | ParseError | null) => void;
 }
 
 class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
@@ -24,11 +26,14 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
       "mainMenuBar": true,
       onChange: () => {
         // get() can throw an exception in mode "code", when the editor contains invalid JSON
-        const editor = this.jsoneditor as JSONEditor;
+        let editorData = null;
+        let errorFromEditor: ParseError | null = null;
         try {
-          this.props.onChangeJson && this.props.onChangeJson(editor.get(), null);
+          editorData = (this.jsoneditor as JSONEditor).get();
         } catch (err) {
-          this.props.onChangeJson && this.props.onChangeJson(null, err.toString());
+          errorFromEditor = err;
+        } finally {
+          this.props.onChangeJson && this.props.onChangeJson(editorData, errorFromEditor);
         }
       }
     };
@@ -42,9 +47,9 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
     this.jsoneditor && this.jsoneditor.destroy();
   }
 
-  componentWillUpdate(nextProps: JSONEditorAreaProps) {
-    if (nextProps.data && nextProps.isValidJSON) { 
-      (this.jsoneditor as JSONEditor).update(nextProps.data);
+  componentDidUpdate() {
+    if (this.props.data && this.props.isValidJSON) { 
+      (this.jsoneditor as JSONEditor).update(this.props.data);
     }    
   }
 
