@@ -2,7 +2,7 @@ let input, output;
 
 describe('validate & prettify', () => {
 	beforeEach(() => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('/')
   })
 
 	it('should prettify valid json string', () => {

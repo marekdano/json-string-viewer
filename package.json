@@ -8,6 +8,7 @@
     "@types/node": "11.13.8",
     "@types/react": "16.8.14",
     "@types/react-dom": "16.8.4",
+    "is-ci-cli": "^1.1.1",
     "jsoneditor": "^5.32.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -15,11 +16,20 @@
     "typescript": "3.4.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "is-ci \"start:start\" \"start:dev\"",
+    "start:dev": "PORT=8001 react-scripts start",
+    "start:prod": "serve --no-clipboard --single --listen 8001 dist",
+    "build": "react-scripts build && mv build dist",
+    "test": "is-ci \"test:coverage\" \"test:watch\"",
+    "test:watch": "react-scripts test",
     "test:coverage": "npm run test -- --watchAll=false --coverage",
-    "cy:run": "npx cypress run"
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "pretest:e2e:run": "npm run build --silent",
+    "test:e2e:run": "start-server-and-test start:prod http://localhost:8001 cy:run",
+    "test:e2e:dev": "start-server-and-test start:dev http://localhost:8001 cy:open",
+    "validate": "npm run test:coverage && npm run test:e2e:run",
+    "setup": "yarn && npm run validate"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,6 +53,8 @@
     "dom-testing-library": "^4.1.0",
     "eslint-plugin-cypress": "^2.2.1",
     "jest-dom": "^3.2.2",
-    "react-testing-library": "^7.0.0"
+    "react-testing-library": "^7.0.0",
+    "serve": "^11.0.1",
+    "start-server-and-test": "^1.9.1"
   }
 }
