@@ -16,13 +16,13 @@
     "typescript": "3.4.5"
   },
   "scripts": {
-    "start": "is-ci \"start:start\" \"start:dev\"",
+    "start": "is-ci \"start:prod\" \"start:dev\"",
     "start:dev": "PORT=8001 react-scripts start",
     "start:prod": "serve --no-clipboard --single --listen 8001 dist",
     "build": "react-scripts build && mv build dist",
     "test": "is-ci \"test:coverage\" \"test:watch\"",
     "test:watch": "react-scripts test",
-    "test:coverage": "npm run test -- --watchAll=false --coverage",
+    "test:coverage": "npm run test:watch -- --watchAll=false --coverage",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "pretest:e2e:run": "npm run build --silent",
