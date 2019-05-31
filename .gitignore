@@ -7,8 +7,6 @@ cypress/videos
 cypress/screenshots
 cypress/integration/examples
 
-yarn-error.log
-
 # these cause more harm than good
 # when working with contributors
 package-lock.json
