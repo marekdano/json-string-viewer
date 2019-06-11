@@ -5,9 +5,6 @@ import './JSONEditorArea.css';
 
 export type ParseError = {message: string};
 
-interface JSON {
-  [key: string]: any; 
-}
 interface JSONEditorAreaProps {
   type: 'input' | 'output';
   isValidJSON?: boolean;

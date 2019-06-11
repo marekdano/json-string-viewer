@@ -3,7 +3,6 @@ import './App.css';
 import JSONEditorArea, { ParseError } from './components/JSONEditorArea';
 import { validateJSON } from './utils/json-utils';
 
-
 const App: React.FC = () => {
   const [jsonValidString, setJsonValidString] = useState<string>();
   const [output, setOutput] = useState<string>();
