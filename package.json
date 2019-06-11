@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "is-ci \"start:prod\" \"start:dev\"",
-    "start:dev": "PORT=8001 react-scripts start",
+    "start:dev": "export PORT=8001 && react-scripts start",
     "start:prod": "serve --no-clipboard --single --listen 8001 dist",
     "build": "react-scripts build && mv build dist",
     "test": "is-ci \"test:coverage\" \"test:watch\"",

@@ -1,7 +1,49 @@
-[![Build Status](https://secure.travis-ci.org/marekdano/json-string-viewer.svg?branch=master)](http://travis-ci.org/getsimpleadmin/simpleadmin-rails) [![coverage](https://codecov.io/gh/marekdano/json-string-viewer/branch/master/graph/badge.svg)](https://codecov.io/gh/marekdano/json-string-viewer)
+[![Build Status](https://secure.travis-ci.org/marekdano/json-string-viewer.svg?branch=master)](http://travis-ci.org/marekdano/json-string-viewer) 
+<!-- [![coverage](https://codecov.io/gh/marekdano/json-string-viewer/branch/master/graph/badge.svg)](https://codecov.io/gh/marekdano/json-string-viewer) -->
 
 # json-string-viewer
-This is the JSON viewer which parse JSON string and display it in the JSON editor. The viewer also parse the JSON string which is inside of the valid JSON.   
+*JSON viewer which parse JSON string and display it in the JSON editor.* 
+
+## Description
+
+Having a valid JSON in the string format can be hard to modify. This app has been build to validate, parse and format json string and displaying the result JSON into the JSON editor.
+
+[https://json-string-viewer.netlify.com](https://json-string-viewer.netlify.com)
+
+## Features
+
+* Validate json string
+* Convert json sting to JSON tree strucutre and format it
+
+## Development
+
+### Install dependencies
+```
+yarn
+```
+
+### Running the app locally
+
+```
+yarn start:dev
+```
+After running the project just open your browser and go to http://localhost:8001
+
+### Testing
+
+The project is tested by running unit/intergration (jest) and e2e (cypress) tests.
+
+Run integration tests by
+```
+yarn test:watch
+```
+
+and e2e tests
+```
+yarn test:e2e:dev
+```
+
+For more information about the npm scripts, please check *package.json*.
 
 
 ## Contributing
