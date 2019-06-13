@@ -22,3 +22,11 @@ export const validateJSON = (jsonValidString: string): string => {
     return result as string;
   }
 }
+
+export const isObject = (value: Object): boolean => {
+  return value instanceof Object;
+}
+
+export const isObjectEmpty = (obj: Object): boolean => {
+  return Object.keys(obj).length === 0;
+} 
