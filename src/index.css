@@ -21,3 +21,10 @@ code {
 #root {
   height: 100%;
 }
+
+input {
+  border: 1px solid white;
+  border-radius: 2px;
+  padding: .3rem;
+  font-weight: 500;
+}
