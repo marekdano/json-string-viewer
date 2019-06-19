@@ -1,5 +1,4 @@
-import { parseJsonString, validateJSON, ParsedJSONError, isObjectEmpty} from '../json-utils';
-import { isObject } from 'util';
+import { parseJsonString, validateJSON, ParsedJSONError, isObjectEmpty, isObject} from '../json-utils';
 
 describe('#parseJsonString', () => {
   test('should return JSON Object when parsing a valid JSON string', () => {

@@ -13,7 +13,8 @@ Having a valid JSON in the string format can be hard to modify. This app has bee
 ## Features
 
 * Validate json string
-* Convert json sting to JSON tree strucutre and format it
+* Convert json string to JSON tree structure and format it
+* Convert json string in the valid JSON to the JSON tree structure
 
 ## Development
 

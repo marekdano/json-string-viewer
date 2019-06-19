@@ -3,7 +3,7 @@ import './App.css';
 import JSONEditorArea, { ParseError } from './components/JSONEditorArea';
 import { validateJSON, isObject, isObjectEmpty } from './utils/json-utils';
 
-interface JSONObject {
+export interface JSONObject {
   [key: string]: any;
 }
 
