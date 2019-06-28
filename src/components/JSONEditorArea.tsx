@@ -2,14 +2,15 @@ import React from 'react';
 import JSONEditor, { JSONEditorOptions } from 'jsoneditor';
 import 'jsoneditor/dist/jsoneditor.css';
 import './JSONEditorArea.css';
+import { JSONObject } from '../App';
 
 export type ParseError = {message: string};
 
 interface JSONEditorAreaProps {
   type: 'input' | 'output';
   isValidJSON?: boolean;
-  data?: string | null;
-  onChangeJson?: (value: string | null, error: string | ParseError | null) => void;
+  data?: string | JSONObject | null;
+  onChangeTextArea?: (value: string | null, error: string | ParseError | null, type: 'input' | 'output') => void;
 }
 
 class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
@@ -30,7 +31,7 @@ class JSONEditorArea extends React.Component<JSONEditorAreaProps> {
         } catch (err) {
           errorFromEditor = err;
         } finally {
-          this.props.onChangeJson && this.props.onChangeJson(editorData, errorFromEditor);
+          this.props.onChangeTextArea && this.props.onChangeTextArea(editorData, errorFromEditor, this.props.type);
         }
       }
     };
