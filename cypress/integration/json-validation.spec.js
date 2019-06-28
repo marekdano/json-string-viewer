@@ -6,8 +6,9 @@ describe('validate & prettify', () => {
   })
 
 	it('should prettify valid json string when json string and input path values are enetered', () => {
-		input = '\"{{}\\"array\\": [1, 2, 3],\\"boolean\\": true,\\"null\\": null, \\"number\\": \\"four\\",\\"string\\": \\"Hello World again\\"}\"';
-		output = JSON.parse("{\"array\":[1, 2, 3],\"boolean\":true,\"null\":null,\"number\":\"four\",\"string\":\"Hello World again\"}");
+		input = '\"{{}\\"array\\": [1, 2, 3],\\"boolean\\":true,\\"null\\": null, \\"number\\": \\"four\\",\\"string\\": \\"Hello World again\\"}\"';
+		output = JSON.stringify(JSON.parse('{\"array\":[1, 2, 3],\"boolean\":true,\"null\":null,\"number\":\"four\",\"string\":\"Hello World again\"}'));
+
 
 		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
 			.clear({force: true})
@@ -24,10 +25,10 @@ describe('validate & prettify', () => {
 				const values = $div.map((i, el) => Cypress.$(el).text())
 				const result = values
 					.get()
-					.map(line => line.trimLeft())
+					.map(line => line.trimLeft().replace(': ', ':'))
 					.join('')
-			
-				expect(result).to.eq(JSON.stringify(output))
+				
+				expect(result).to.eq(output)
 			});
 	});
 
@@ -48,7 +49,7 @@ describe('validate & prettify', () => {
 				const values = $div.map((i, el) => Cypress.$(el).text())
 				const result = values
 					.get()
-					.map(line => line.trimLeft())
+					.map(line => line.trimLeft().replace(': ', ':'))
 					.join('')
 			
 				expect(result).to.eq(JSON.stringify(output))
@@ -96,7 +97,7 @@ describe('validate & prettify', () => {
 				const values = $div.map((i, el) => Cypress.$(el).text())
 				const result = values
 					.get()
-					.map(line => line.trimLeft())
+					.map(line => line.trimLeft().replace(': ', ':'))
 					.join('')
 			
 				expect(result).to.eq(JSON.stringify(output))
@@ -119,7 +120,7 @@ describe('validate & prettify', () => {
 				const values = $div.map((i, el) => Cypress.$(el).text())
 				const result = values
 					.get()
-					.map(line => line.trimLeft())
+					.map(line => line.trimLeft().replace(': ', ':'))
 					.join('')
 			
 				expect(result).to.eq(JSON.stringify(output))
@@ -144,7 +145,7 @@ describe('validate & prettify', () => {
 				const values = $div.map((i, el) => Cypress.$(el).text())
 				const result = values
 					.get()
-					.map(line => line.trimLeft())
+					.map(line => line.trimLeft().replace(': ', ':'))
 					.join('')
 			
 				expect(result).to.eq(JSON.stringify(output))

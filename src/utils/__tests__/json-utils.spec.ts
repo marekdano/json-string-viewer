@@ -1,4 +1,4 @@
-import { parseJsonString, validateJSON, ParsedJSONError, isObjectEmpty, isObject} from '../json-utils';
+import { parseJsonString, validateJSON, ParsedJSONError, isObjectEmpty, isObject, getJSONStringThroughPath} from '../json-utils';
 
 describe('#parseJsonString', () => {
   test('should return JSON Object when parsing a valid JSON string', () => {
@@ -46,5 +46,27 @@ describe('isObjectEmpty', () => {
 
   test('should return false when object is NOT empty', () => {
     expect(isObjectEmpty({"age": 10})).toBeFalsy();
+  });
+});
+
+describe('getJSONStringThroughPath', () => {
+  test('should return string when valid object path is provided', () => {
+    const input = {
+      "Report": {
+        "Configuration": "This is the configuration file"
+      }
+    };
+    
+    expect(getJSONStringThroughPath(input, ['Report', 'Configuration'])).toEqual("This is the configuration file");
+  });
+
+  test('should return string when INVALID object path is provided', () => {
+    const input = {
+      "Report": {
+        "Configuration": "This is the configuration file"
+      }
+    };
+    
+    expect(getJSONStringThroughPath(input, ['Report', 'Invalid'])).toEqual(undefined);
   });
 });

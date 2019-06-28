@@ -1,3 +1,5 @@
+import { JSONObject } from "../App";
+
 export interface ParsedJSONError {
   error: boolean;
   errorMessage: string
@@ -30,3 +32,11 @@ export const isObject = (value: Object): boolean => {
 export const isObjectEmpty = (obj: Object): boolean => {
   return Object.keys(obj).length === 0;
 } 
+
+export const getJSONStringThroughPath = (validJSON: JSONObject, path: string[]): string | undefined => {
+  let jsonStringThroughPath: string | JSONObject = validJSON;
+  for (const item of path) { 
+    jsonStringThroughPath =  (jsonStringThroughPath as JSONObject)[item];
+  }
+  return jsonStringThroughPath as string;
+}
