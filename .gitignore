@@ -10,7 +10,7 @@ cypress/integration/examples
 # these cause more harm than good
 # when working with contributors
 package-lock.json
-yarn.lock# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+yarn.lock # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
 /node_modules
