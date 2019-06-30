@@ -1,6 +1,6 @@
 import { JSONObject } from "../App";
 
-export const downloadFile = (fileContent: JSONObject, filename: string = 'default_name') => {
+export const downloadFile = (fileContent: JSONObject | string, filename: string = 'default_name') => {
   const blob = new Blob([JSON.stringify(fileContent, null, 2)], {
     type: 'application/json'
   });

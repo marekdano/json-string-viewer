@@ -19,22 +19,28 @@ const getJsonString = (
   return jsonString;
 }
 
-const handleDownloadJSONFile = (originalJSON: JSONObject, modifiedJSON: JSONObject, path: string): void => {
-  const arrOfPath = path.split('.');
-  arrOfPath.reduce((obj, pathName, index, originalArray) => {
-    if (index === originalArray.length-1) {
-      obj[pathName] = JSON.stringify(modifiedJSON);
-      return obj[pathName];
-    }
-    return obj[pathName]
-  }, originalJSON); 
-  
-  downloadFile(originalJSON);
+const handleDownloadJSONFile = (
+  {originalString, originalJSON, modifiedJSON, path}: 
+  {originalString: string; originalJSON: JSONObject; modifiedJSON: JSONObject | string | undefined; path: string}
+): void => {
+  if (originalString) {
+    downloadFile(JSON.stringify(modifiedJSON));
+  } else {
+    const arrOfPath = path.split('.');
+    arrOfPath.reduce((obj, pathName, index, originalArray) => {
+      if (index === originalArray.length-1) {
+        obj[pathName] = JSON.stringify(modifiedJSON);
+        return obj[pathName];
+      }
+      return obj[pathName]
+    }, originalJSON);
+    downloadFile(originalJSON);
+  }
 }
 
 const App: React.FC = () => {
   const [pathToJsonString, setPathToJsonString] = useState<string>('');
-  const [validJSONString, setvalidJSONString] = useState<string>('');
+  const [validJSONString, setValidJSONString] = useState<string>('');
   const [validJSON, setValidJSON] = useState<JSONObject>({});
   const [output, setOutput] = useState<JSONObject | string>();
   const [error, setError] = useState<ParseError | null | string>();
@@ -46,7 +52,9 @@ const App: React.FC = () => {
       setValidJSON(jsonValue as JSONObject);
 
       if ((value || value === '') && typeof value === 'string' && !error ) {
-        setvalidJSONString(value as string);
+        setValidJSONString(value as string);
+      } else {
+        setValidJSONString('');
       }
     }
 
@@ -63,7 +71,11 @@ const App: React.FC = () => {
   return (
     <main>
       <h2>JSON string Viewer<span className="subtitle"> - paste JSON string to the left panel to see the result in the right one</span></h2>
-      {/* <button onClick={() => handleDownloadJSONFile(validJSON, output as JSONEditorArea, pathToJsonString)}>Download</button> */}
+      <button 
+        onClick={() => handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString})}
+      >
+        Download
+      </button>
       <section>
         <JSONEditorArea isValidJSON={!error} type='input' onChangeTextArea={handleJSONChange} />
         <section className="action-buttons">
