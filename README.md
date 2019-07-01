@@ -15,6 +15,8 @@ Having a valid JSON in the string format can be hard to modify. This app has bee
 * Validate json string
 * Convert json string to JSON tree structure and format it
 * Convert json string in the valid JSON to the JSON tree structure
+* Download modified json string as a json string
+* Download extracted and modified json string from a valid JSON as a new valid JSON
 
 ## Development
 
