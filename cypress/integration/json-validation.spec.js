@@ -9,7 +9,6 @@ describe('validate & prettify', () => {
 		input = '\"{{}\\"array\\": [1, 2, 3],\\"boolean\\":true,\\"null\\": null, \\"number\\": \\"four\\",\\"string\\": \\"Hello World again\\"}\"';
 		output = JSON.stringify(JSON.parse('{\"array\":[1, 2, 3],\"boolean\":true,\"null\":null,\"number\":\"four\",\"string\":\"Hello World again\"}'));
 
-
 		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
 			.clear({force: true})
 			.type(input, {force: true})
@@ -151,4 +150,172 @@ describe('validate & prettify', () => {
 				expect(result).to.eq(JSON.stringify(output))
 			});
 	}); 
+
+	it('should download valid JSON when json string is extracted and modified', () => {
+		input = `{{}"Report": {{}"Configuration": \"{{}\\"array\\": [1, 2, 3],\\"text\\": \\"Hello World again\\"}\"}}`;
+
+		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
+			.clear({force: true})
+			.type(input, {force: true})
+			.get('input#pathToJsonString')
+			.type('Report.Configuration')
+			.getByText(/Validate & Prettify JSON string/i)
+			.click()
+			.get('#output > .jsoneditor > .jsoneditor-menu > .jsoneditor-compact')
+			.click()
+			.get('#btn__download')
+			.click()
+			.get('a[download]')
+			.then((anchor) => (
+				new Cypress.Promise((resolve, reject) => {
+          // Use XHR to get the blob that corresponds to the object URL.
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', anchor.prop('href'), true);
+          xhr.responseType = 'blob';
+
+          // Once loaded, use FileReader to get the string back from the blob.
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              const blob = xhr.response;
+              const reader = new FileReader();
+              reader.onload = () => {
+                // Once we have a string, resolve the promise to let
+                // the Cypress chain continue, e.g. to assert on the result.
+                resolve(reader.result.replace(/\s/g,''));
+              };
+              reader.readAsText(blob);
+            }
+          };
+          xhr.send();
+        })
+      ))
+			.should('equal', '{"Report":{"Configuration":"{\\"array\\":[1,2,3],\\"text\\":\\"HelloWorldagain\\"}"}}');
+	});
+
+	it('should download json string after modifying it', () => {
+		input = '\"{{}\\"array\\": [1, 2, 3],\\"text\\": \\"Hello World again\\"}\"';
+		
+		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
+			.clear({force: true})
+			.type(input, {force: true})
+			.getByText(/Validate & Prettify JSON string/i)
+			.click()
+			.get('input#pathToJsonString')
+			.type('Report.Configuration')
+			.getByText(/Validate & Prettify JSON string/i)
+			.click()
+			.get('#output > .jsoneditor > .jsoneditor-menu > .jsoneditor-compact')
+			.click()
+			.get('#btn__download')
+			.click()
+			.get('a[download]')
+			.then((anchor) => (
+				new Cypress.Promise((resolve, reject) => {
+          // Use XHR to get the blob that corresponds to the object URL.
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', anchor.prop('href'), true);
+          xhr.responseType = 'blob';
+
+          // Once loaded, use FileReader to get the string back from the blob.
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              const blob = xhr.response;
+              const reader = new FileReader();
+              reader.onload = () => {
+                // Once we have a string, resolve the promise to let
+                // the Cypress chain continue, e.g. to assert on the result.
+                resolve(reader.result.replace(/\s/g,''));
+              };
+              reader.readAsText(blob);
+            }
+          };
+          xhr.send();
+        })
+      ))
+			.should('equal', '"{\\"array\\":[1,2,3],\\"text\\":\\"HelloWorldagain\\"}"');
+	});
+
+	it('should clear previous input', () => {
+		const input1 = '\"{{}\\"array\\": [1, 2, 3],\\"text\\": \\"Hello World again\\"}\"';
+		const input2 = `{{}"Report": {{}"Configuration": \"{{}\\"array\\": [1, 2, 3],\\"text\\": \\"Hello World again\\"}\"}}`;
+
+		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
+			.clear({force: true})
+			.type(input1, {force: true})
+			.getByText(/Validate & Prettify JSON string/i)
+			.click()
+			.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
+			.clear({force: true})
+			.type(' ', {force: true})
+			.type(input2, {force: true})
+			.get('input#pathToJsonString')
+			.type('Report.Configuration')
+			.getByText(/Validate & Prettify JSON string/i)
+			.click()
+			.get('#output > .jsoneditor > .jsoneditor-menu > .jsoneditor-compact')
+			.click()
+			.get('#btn__download')
+			.click()
+			.get('a[download]')
+			.then((anchor) => (
+				new Cypress.Promise((resolve, reject) => {
+          // Use XHR to get the blob that corresponds to the object URL.
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', anchor.prop('href'), true);
+          xhr.responseType = 'blob';
+
+          // Once loaded, use FileReader to get the string back from the blob.
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              const blob = xhr.response;
+              const reader = new FileReader();
+              reader.onload = () => {
+                // Once we have a string, resolve the promise to let
+                // the Cypress chain continue, e.g. to assert on the result.
+                resolve(reader.result.replace(/\s/g,''));
+              };
+              reader.readAsText(blob);
+            }
+          };
+          xhr.send();
+        })
+      ))
+			.should('equal', '{"Report":{"Configuration":"{\\"array\\":[1,2,3],\\"text\\":\\"HelloWorldagain\\"}"}}')
+			
+			.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
+			.clear({force: true})
+			.type(' ', {force: true})
+			.type(input1, {force: true})
+			.getByText(/Validate & Prettify JSON string/i)
+			.click()
+			.get('#output > .jsoneditor > .jsoneditor-menu > .jsoneditor-compact')
+			.click()
+			.get('#btn__download')
+			.click()
+			.get('a[download]')
+			.then((anchor) => (
+				new Cypress.Promise((resolve, reject) => {
+          // Use XHR to get the blob that corresponds to the object URL.
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', anchor.prop('href'), true);
+          xhr.responseType = 'blob';
+
+          // Once loaded, use FileReader to get the string back from the blob.
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              const blob = xhr.response;
+              const reader = new FileReader();
+              reader.onload = () => {
+                // Once we have a string, resolve the promise to let
+                // the Cypress chain continue, e.g. to assert on the result.
+                resolve(reader.result.replace(/\s/g,''));
+              };
+              reader.readAsText(blob);
+            }
+          };
+          xhr.send();
+        })
+      ))
+			.should('equal', '"{\\"array\\":[1,2,3],\\"text\\":\\"HelloWorldagain\\"}"');
+	});
 });
