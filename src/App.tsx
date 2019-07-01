@@ -24,7 +24,7 @@ const handleDownloadJSONFile = (
   {originalString: string; originalJSON: JSONObject; modifiedJSON: JSONObject | string | undefined; path: string}
 ): void => {
   if (originalString) {
-    downloadFile(JSON.stringify(modifiedJSON));
+    downloadFile(JSON.stringify(modifiedJSON), 'json_string.txt');
   } else {
     const arrOfPath = path.split('.');
     arrOfPath.reduce((obj, pathName, index, originalArray) => {
@@ -71,7 +71,7 @@ const App: React.FC = () => {
   return (
     <main>
       <h2>JSON string Viewer<span className="subtitle"> - paste JSON string to the left panel to see the result in the right one</span></h2>
-      <button 
+      <button id="btn__download"
         onClick={() => handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString})}
       >
         Download
