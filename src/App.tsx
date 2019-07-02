@@ -72,7 +72,10 @@ const App: React.FC = () => {
     <main>
       <h2>JSON string Viewer<span className="subtitle"> - paste JSON string to the left panel to see the result in the right one</span></h2>
       <button id="btn__download"
-        onClick={() => handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString})}
+        onClick={() => !error 
+          ? handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString})
+          : alert('The input JSON is invalid and cannot be downloaded.')
+        }
       >
         Download
       </button>

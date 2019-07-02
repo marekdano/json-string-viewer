@@ -49,3 +49,7 @@ main section {
   background: #ffffff;
   outline: 0;
 }
+
+#btn__download {
+  margin-bottom: 0.3rem; 
+}
