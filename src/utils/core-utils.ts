@@ -16,6 +16,12 @@ export const downloadFile = (fileContent: JSONObject | string, filename: string 
     if (link.download !== undefined) {
       link.setAttribute('href', URL.createObjectURL(blob));
       link.setAttribute('download', `${filename}`);
+      if ((window as any).Cypress) {
+        // Do not attempt to actually download the file in test.
+        // Just leave the anchor in there. Ensure your code doesn't
+        // automatically remove it either.
+        return;
+      }
       link.click();
     } else {
       window.open(encodeURI('data:application/json'));
