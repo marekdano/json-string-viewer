@@ -80,7 +80,7 @@ describe('validate & prettify', () => {
 
 	it('should display error message when valid JSON is entered and uncorrect path input to json string is entered.', () => {
 		input = `{{}"Report": {{}"Configuration": {{}"array": [1, 2, 3], "string": "Hello World again"}}}`;
-		output = "Unexpected token u in JSON at position 0";
+		output = "Unexpected token o in JSON at position 1";
 
 		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
 			.clear({force: true})
@@ -105,7 +105,7 @@ describe('validate & prettify', () => {
 
 	it('should display error message when valid JSON is entered and no value in path input to json string is entered.', () => {
 		input = `{{}"Report": {{}"Configuration": {{}"array": [1, 2, 3], "string": "Hello World again"}}}`;
-		output = "Unexpected token u in JSON at position 0";
+		output = "Unexpected token o in JSON at position 1";
 
 		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
 			.clear({force: true})
@@ -235,7 +235,7 @@ describe('validate & prettify', () => {
 			.should('equal', '"{\\"array\\":[1,2,3],\\"text\\":\\"HelloWorldagain\\"}"');
 	});
 
-	it.only('should display alert message when JSON is invalid and the Download button is hit', () => {
+	it('should display alert message when JSON is invalid and the Download button is hit', () => {
 		const input1 = '\"{{}\\"array\\": [1, 2, 3],\\"text\\": \\"Hello World again\\"}\"';
 		const input2 = `{{}"Report": {{}"Configuration": \"{{}\\"array\\": [1, 2, 3],\\"text\\": \\"Hello World again\\"}\"}}`;
 
@@ -259,5 +259,22 @@ describe('validate & prettify', () => {
 		cy.on('window:alert', (str) => {
 			expect(str).to.equal('The input JSON is invalid and cannot be downloaded.')
 		});
+	});
+
+	it('should display alert message when path to json string is invalid and the input JSON is parsed', () => {
+		const input = `{{}"Report": {{}"Configuration": \"{{}\\"array\\": [1, 2, 3],\\"text\\": \\"Hello World again\\"}\"}}`;
+		const invalidPath = 'Report.Invalid';
+
+		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
+			.clear({force: true})
+			.type(input, {force: true})
+			.get('input#pathToJsonString')
+			.type(invalidPath)
+			.getByText(/Validate & Prettify JSON string/i)
+			.click()
+	
+		cy.on('window:alert', (str) => {
+			expect(str).to.equal('The path to get json string is invalid.')
+		});	
 	});
 });
