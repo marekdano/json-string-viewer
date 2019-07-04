@@ -66,7 +66,8 @@ describe('getJSONStringThroughPath', () => {
         "Configuration": "This is the configuration file"
       }
     };
-    
+    window.alert = () => {};
+
     expect(getJSONStringThroughPath(input, ['Report', 'Invalid'])).toEqual(undefined);
   });
 });

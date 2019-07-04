@@ -40,6 +40,7 @@ export const getJSONStringThroughPath = (validJSON: JSONObject, path: string[]):
       jsonStringThroughPath = (jsonStringThroughPath as JSONObject)[item];
     } else {
       alert('The path to get json string is invalid.');
+      return undefined;
     }
   }
   return jsonStringThroughPath as string;

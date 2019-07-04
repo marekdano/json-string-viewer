@@ -80,7 +80,7 @@ describe('validate & prettify', () => {
 
 	it('should display error message when valid JSON is entered and uncorrect path input to json string is entered.', () => {
 		input = `{{}"Report": {{}"Configuration": {{}"array": [1, 2, 3], "string": "Hello World again"}}}`;
-		output = "Unexpected token o in JSON at position 1";
+		output = "Unexpected token u in JSON at position 0";
 
 		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
 			.clear({force: true})
@@ -105,7 +105,7 @@ describe('validate & prettify', () => {
 
 	it('should display error message when valid JSON is entered and no value in path input to json string is entered.', () => {
 		input = `{{}"Report": {{}"Configuration": {{}"array": [1, 2, 3], "string": "Hello World again"}}}`;
-		output = "Unexpected token o in JSON at position 1";
+		output = "Unexpected token u in JSON at position 0";
 
 		cy.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > textarea')
 			.clear({force: true})
