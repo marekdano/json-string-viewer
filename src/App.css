@@ -11,6 +11,7 @@ main h2 {
 
 .subtitle {
   font-size: 1rem;
+  font-style: italic;
 }
 
 section textarea {
@@ -21,7 +22,7 @@ main section {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 90%;
+  height: 85%;
 }
 
 .action-buttons {
@@ -51,5 +52,21 @@ main section {
 }
 
 #btn__download {
+  background: transparent;
   margin-bottom: 0.3rem; 
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  font-weight: 600;
+  padding: .16rem .6rem;
+}
+
+#btn__download:hover, #btn__download:active {
+  color: #2C3E50;
+  background-color: #ffffff;
+  border: 2px solid #2C3E50;
+  outline: none;
+}
+
+#btn__download:focus {
+  outline: 0;
 }
