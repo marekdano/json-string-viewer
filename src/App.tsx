@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import './App.css';
 import JSONEditorArea, { ParseError } from './components/JSONEditorArea';
 import { validateJSON, isObject, isObjectEmpty, getJSONStringThroughPath } from './utils/json-utils';
@@ -44,6 +44,7 @@ const App: React.FC = () => {
   const [validJSON, setValidJSON] = useState<JSONObject>({});
   const [output, setOutput] = useState<JSONObject | string>();
   const [error, setError] = useState<ParseError | null | string>();
+  const [input, setInput] = useState<JSONObject | string>();
 
   const handleJSONChange = (value: string | JSONObject | null, error: string | ParseError | null, type: 'input' | 'output') => {
     if (type === 'input') {
@@ -56,10 +57,26 @@ const App: React.FC = () => {
       } else {
         setValidJSONString('');
       }
+
+      if (!value) setInput('')
     }
 
     if (!error && type === 'output') {
       setOutput(value as JSONObject);
+    }
+  }
+
+  const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e && ((e.target as HTMLInputElement).files as FileList)[0];
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onloadend = (e) => {
+        const content = fileReader.result as string;
+
+        setInput(JSON.parse(content));
+        handleJSONChange(JSON.parse(content), null, 'input');
+      }
+      fileReader.readAsText(file);
     }
   }
 
@@ -71,6 +88,9 @@ const App: React.FC = () => {
   return (
     <main>
       <h2>JSON string Viewer<span className="subtitle"> - paste JSON string to the left panel to see and modify it in the right panel</span></h2>
+      <button>
+      <input type="file" name="file" accept=".json" onChange={handleUploadFile}/>
+      </button>
       <button id="btn__download"
         onClick={() => !error 
           ? handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString})
@@ -80,7 +100,7 @@ const App: React.FC = () => {
         Download
       </button>
       <section>
-        <JSONEditorArea isValidJSON={!error} type='input' onChangeTextArea={handleJSONChange} />
+        <JSONEditorArea data={input} isValidJSON={!error} type='input' onChangeTextArea={handleJSONChange} />
         <section className="action-buttons">
           <input id="pathToJsonString" type="text" placeholder="Path to JSON string (Report.Configuration)" onChange={(e) => setPathToJsonString(e.target.value)}/>
           <button id="generalJSON" onClick={onJsonValidation}>Validate & Prettify JSON string</button>
