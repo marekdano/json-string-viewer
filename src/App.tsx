@@ -73,8 +73,13 @@ const App: React.FC = () => {
       fileReader.onloadend = (e) => {
         const content = fileReader.result as string;
 
-        setInput(JSON.parse(content));
-        handleJSONChange(JSON.parse(content), null, 'input');
+        try {
+          const jsonContent = JSON.parse(content);
+          setInput(jsonContent);
+          handleJSONChange(jsonContent, null, 'input');
+        } catch (err) {
+          alert('The uploaded JSON file is invalid.')
+        }
       }
       fileReader.readAsText(file);
     }
@@ -88,18 +93,21 @@ const App: React.FC = () => {
   return (
     <main>
       <h2>JSON string Viewer<span className="subtitle"> - paste JSON string to the left panel to see and modify it in the right panel</span></h2>
-      <button>
-      <input type="file" name="file" accept=".json" onChange={handleUploadFile}/>
-      </button>
-      <button id="btn__download"
-        onClick={() => !error 
-          ? handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString})
-          : alert('The input JSON is invalid and cannot be downloaded.')
-        }
-      >
-        Download
-      </button>
-      <section>
+      
+      <section  className="menu-btns">
+        <input type="file" id="file_upload" name="file_upload" accept=".json" onChange={handleUploadFile} />
+        <label htmlFor="file_upload" className="btn-action" data-test-id="btn-upload">Upload</label>
+        <label className="btn-action" data-test-id="btn-download"
+          onClick={() => !error 
+            ? handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString})
+            : alert('The input JSON is invalid and cannot be downloaded.')
+          }
+        >
+          Download
+        </label>
+      </section>
+      
+      <section className="editor">
         <JSONEditorArea data={input} isValidJSON={!error} type='input' onChangeTextArea={handleJSONChange} />
         <section className="action-buttons">
           <input id="pathToJsonString" type="text" placeholder="Path to JSON string (Report.Configuration)" onChange={(e) => setPathToJsonString(e.target.value)}/>

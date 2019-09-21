@@ -14,25 +14,24 @@ main h2 {
   font-style: italic;
 }
 
-section textarea {
-  flex: auto;
-}
-
-main section {
+main section.editor {
   display: flex;
   flex-direction: row;
   width: 100%;
   height: 85%;
 }
 
-.action-buttons {
+main section.editor textarea {
+  flex: auto;
+}
+
+main section.editor .action-buttons {
   display: flex;
   flex-direction: column;
-  max-width: 12rem;
   padding: 0 1rem;
 }
 
-.action-buttons button {
+main section.editor .action-buttons button {
   padding: .4rem 0;
   margin: 1rem 0;
   font-size: .9rem;
@@ -45,28 +44,41 @@ main section {
   cursor: pointer;
 }
 
-.action-buttons button:focus, .action-buttons button:hover {
+main section.editor .action-buttons button:focus, .action-buttons button:hover {
   color: #15BC9B;
   background: #ffffff;
   outline: 0;
 }
 
-#btn__download {
+main section.menu-btns {
+  margin-bottom: 0.8rem;
+}
+
+section.menu-btns .btn-action {
   background: transparent;
-  margin-bottom: 0.3rem; 
   color: #ffffff;
   border: 2px solid #ffffff;
   font-weight: 600;
+  margin-right: 0.8rem;
   padding: .16rem .6rem;
+  cursor: pointer;
 }
 
-#btn__download:hover, #btn__download:active {
+section.menu-btns .btn-action:hover, .btn-action:active {
   color: #2C3E50;
   background-color: #ffffff;
   border: 2px solid #2C3E50;
-  outline: none;
+  outline: 0 none;
 }
 
-#btn__download:focus {
+section.menu-btns .btn-action:focus {
   outline: 0;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+#generalJSON {
+  width: 12rem;
 }
