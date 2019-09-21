@@ -1,3 +1,5 @@
+import 'cypress-file-upload';
+
 let input, output;
 
 describe('validate & prettify', () => {
@@ -163,7 +165,7 @@ describe('validate & prettify', () => {
 			.click()
 			.get('#output > .jsoneditor > .jsoneditor-menu > .jsoneditor-compact')
 			.click()
-			.get('#btn__download')
+			.get('[data-test-id="btn-download"]')
 			.click()
 			.get('a[download]')
 			.then((anchor) => (
@@ -206,7 +208,7 @@ describe('validate & prettify', () => {
 			.click()
 			.get('#output > .jsoneditor > .jsoneditor-menu > .jsoneditor-compact')
 			.click()
-			.get('#btn__download')
+			.get('[data-test-id="btn-download"]')
 			.click()
 			.get('a[download]')
 			.then((anchor) => (
@@ -253,7 +255,7 @@ describe('validate & prettify', () => {
 			.click()
 			.get('#output > .jsoneditor > .jsoneditor-menu > .jsoneditor-compact')
 			.click()
-			.get('#btn__download')
+			.get('[data-test-id="btn-download"]')
 			.click()
 			
 		cy.on('window:alert', (str) => {
@@ -276,5 +278,26 @@ describe('validate & prettify', () => {
 		cy.on('window:alert', (str) => {
 			expect(str).to.equal('The path to get json string is invalid.')
 		});	
+	});
+
+	it('should upload a valid JSON file', () => {
+		const fileName = 'upload-valid-file.json';
+		const output = "{\"sample\": \"json\"}";
+
+		cy.fixture(fileName)
+			.then(fileJson => {
+				const fileContent = JSON.stringify(fileJson);
+				cy.get('input[type="file"]').upload({fileContent, fileName, mimeType: 'application/json'}, { subjectType: 'input', force: true })
+			})
+			.get('#input > .jsoneditor > .jsoneditor-outer > .ace_editor > .ace_scroller > .ace_content > .ace_layer.ace_text-layer > .ace_line_group > .ace_line', { timeout: 100 })
+			.should(($div) => {
+				const values = $div.map((i, el) => Cypress.$(el).text())
+				const result = values
+					.get()
+					.map(line => line.trimLeft())
+					.join('')
+			
+				expect(result).to.eq(output)
+			});
 	});
 });
