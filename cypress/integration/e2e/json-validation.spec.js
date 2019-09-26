@@ -2,7 +2,7 @@ import 'cypress-file-upload';
 
 let input, output;
 
-describe('validate & prettify', () => {
+describe('App', () => {
 	beforeEach(() => {
     cy.visit('/')
   })
@@ -45,7 +45,6 @@ describe('validate & prettify', () => {
 			.get('#output > .jsoneditor > .jsoneditor-menu > .jsoneditor-compact')
 			.click()
 			.get('#output > .jsoneditor > .jsoneditor-outer > .ace_editor > .ace_scroller > .ace_content > .ace_layer.ace_text-layer > .ace_line_group > .ace_line')
-			.debug()
 			.should(($div) => {
 				const values = $div.map((i, el) => Cypress.$(el).text())
 				const result = values
@@ -170,6 +169,7 @@ describe('validate & prettify', () => {
 			.get('a[download]')
 			.then((anchor) => (
 				new Cypress.Promise((resolve, reject) => {
+					expect(anchor[0].download).to.eq('json_file.json');
           // Use XHR to get the blob that corresponds to the object URL.
           const xhr = new XMLHttpRequest();
           xhr.open('GET', anchor.prop('href'), true);
@@ -213,9 +213,10 @@ describe('validate & prettify', () => {
 			.get('a[download]')
 			.then((anchor) => (
 				new Cypress.Promise((resolve, reject) => {
+					expect(anchor[0].download).to.eq('json_string.txt');
           // Use XHR to get the blob that corresponds to the object URL.
-          const xhr = new XMLHttpRequest();
-          xhr.open('GET', anchor.prop('href'), true);
+					const xhr = new XMLHttpRequest();
+					xhr.open('GET', anchor.prop('href'), true);
           xhr.responseType = 'blob';
 
           // Once loaded, use FileReader to get the string back from the blob.
@@ -226,7 +227,7 @@ describe('validate & prettify', () => {
               reader.onload = () => {
                 // Once we have a string, resolve the promise to let
                 // the Cypress chain continue, e.g. to assert on the result.
-                resolve(reader.result.replace(/\s/g,''));
+								resolve(reader.result.replace(/\s/g,''));
               };
               reader.readAsText(blob);
             }
@@ -282,7 +283,7 @@ describe('validate & prettify', () => {
 
 	it('should upload a valid JSON file', () => {
 		const fileName = 'upload-valid-file.json';
-		const output = "{\"sample\": \"json\"}";
+		const output = '{"sample": "{\\"array\\": [1, 2, 3],\\"text\\": \\"Hello World again\\"}"}'
 
 		cy.fixture(fileName)
 			.then(fileJson => {
@@ -299,5 +300,53 @@ describe('validate & prettify', () => {
 			
 				expect(result).to.eq(output)
 			});
+	});
+
+	it('should upload, and download valid JSON file with same file name', () => {
+		const fileName = 'upload-valid-file.json';
+		const output = '{"sample":"{\\"array\\":[1,2,3],\\"text\\":\\"HelloWorldagain\\"}"}';
+
+		cy.fixture(fileName)
+			.then(fileJson => {
+				const fileContent = JSON.stringify(fileJson);
+				cy.get('input[type="file"]').upload({fileContent, fileName, mimeType: 'application/json'}, { subjectType: 'input', force: true })
+			})
+		
+		cy.get('input#pathToJsonString')
+			.type('sample')
+			.getByText(/Validate & Prettify JSON string/i)
+			.click()
+			.get('[data-test-id="btn-download"]')
+			.click()
+			.get('a[download]')
+			.then((anchor) => (
+				new Cypress.Promise((resolve, reject) => {
+					expect(anchor[0].download).to.eq(fileName);
+					// Use XHR to get the blob that corresponds to the object URL.
+					const xhr = new XMLHttpRequest();
+					xhr.open('GET', anchor.prop('href'), true);
+          xhr.responseType = 'blob';
+
+          // Once loaded, use FileReader to get the string back from the blob.
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              const blob = xhr.response;
+              const reader = new FileReader();
+              reader.onload = () => {
+                // Once we have a string, resolve the promise to let
+								// the Cypress chain continue, e.g. to assert on the result.
+								
+								console.log('RESULT', reader.result.replace(/\s/g,''))
+								resolve(reader.result.replace(/\s/g,''));
+              };
+              reader.readAsText(blob);
+            }
+          };
+          xhr.send();
+        })
+			))
+			.should('equal', output);
+			console.log('Output', output)
+		
 	});
 });
