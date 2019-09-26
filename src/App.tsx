@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState, ChangeEvent } from 'react';
 import JSONEditorArea, { ParseError } from './components/JSONEditorArea';
 import { validateJSON, isObject, isObjectEmpty, getJSONStringThroughPath } from './utils/json-utils';
 import { downloadFile } from './utils/core-utils';
+import './App.css';
 
 export interface JSONObject {
   [key: string]: any;
@@ -20,8 +20,8 @@ const getJsonString = (
 }
 
 const handleDownloadJSONFile = (
-  {originalString, originalJSON, modifiedJSON, path}: 
-  {originalString: string; originalJSON: JSONObject; modifiedJSON: JSONObject | string | undefined; path: string}
+  {originalString, originalJSON, modifiedJSON, path, filename}: 
+  {originalString: string; originalJSON: JSONObject; modifiedJSON: JSONObject | string | undefined; path: string, filename: string}
 ): void => {
   if (originalString) {
     downloadFile(JSON.stringify(modifiedJSON), 'json_string.txt');
@@ -34,7 +34,7 @@ const handleDownloadJSONFile = (
       }
       return obj[pathName]
     }, originalJSON);
-    downloadFile(originalJSON);
+    downloadFile(originalJSON, filename ? filename : undefined);
   }
 }
 
@@ -44,6 +44,8 @@ const App: React.FC = () => {
   const [validJSON, setValidJSON] = useState<JSONObject>({});
   const [output, setOutput] = useState<JSONObject | string>();
   const [error, setError] = useState<ParseError | null | string>();
+  const [input, setInput] = useState<JSONObject | string>();
+  const [fileName, setFileName] = useState<string>('');
 
   const handleJSONChange = (value: string | JSONObject | null, error: string | ParseError | null, type: 'input' | 'output') => {
     if (type === 'input') {
@@ -56,10 +58,33 @@ const App: React.FC = () => {
       } else {
         setValidJSONString('');
       }
+
+      if (!value) setInput('')
     }
 
     if (!error && type === 'output') {
       setOutput(value as JSONObject);
+    }
+  }
+
+  const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e && ((e.target as HTMLInputElement).files as FileList)[0];
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onloadend = () => {
+        const content = fileReader.result as string;
+
+        try {
+          const jsonContent = JSON.parse(content);
+          setInput(jsonContent);
+          handleJSONChange(jsonContent, null, 'input');
+        } catch (err) {
+          alert('The uploaded JSON file is invalid.')
+        }
+      }
+
+      setFileName(file.name);
+      fileReader.readAsText(file);
     }
   }
 
@@ -71,16 +96,22 @@ const App: React.FC = () => {
   return (
     <main>
       <h2>JSON string Viewer<span className="subtitle"> - paste JSON string to the left panel to see and modify it in the right panel</span></h2>
-      <button id="btn__download"
-        onClick={() => !error 
-          ? handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString})
-          : alert('The input JSON is invalid and cannot be downloaded.')
-        }
-      >
-        Download
-      </button>
-      <section>
-        <JSONEditorArea isValidJSON={!error} type='input' onChangeTextArea={handleJSONChange} />
+      
+      <section  className="menu-btns">
+        <input type="file" id="file_upload" name="file_upload" accept=".json" onChange={handleUploadFile} />
+        <label htmlFor="file_upload" className="btn-action" data-test-id="btn-upload">Upload</label>
+        <label className="btn-action" data-test-id="btn-download"
+          onClick={() => !error 
+            ? handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString, filename: fileName})
+            : alert('The input JSON is invalid and cannot be downloaded.')
+          }
+        >
+          Download
+        </label>
+      </section>
+      
+      <section className="editor">
+        <JSONEditorArea data={input} isValidJSON={!error} type='input' onChangeTextArea={handleJSONChange} />
         <section className="action-buttons">
           <input id="pathToJsonString" type="text" placeholder="Path to JSON string (Report.Configuration)" onChange={(e) => setPathToJsonString(e.target.value)}/>
           <button id="generalJSON" onClick={onJsonValidation}>Validate & Prettify JSON string</button>
