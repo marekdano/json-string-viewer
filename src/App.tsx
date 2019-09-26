@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent } from 'react';
-import './App.css';
 import JSONEditorArea, { ParseError } from './components/JSONEditorArea';
 import { validateJSON, isObject, isObjectEmpty, getJSONStringThroughPath } from './utils/json-utils';
 import { downloadFile } from './utils/core-utils';
+import './App.css';
 
 export interface JSONObject {
   [key: string]: any;
@@ -20,8 +20,8 @@ const getJsonString = (
 }
 
 const handleDownloadJSONFile = (
-  {originalString, originalJSON, modifiedJSON, path}: 
-  {originalString: string; originalJSON: JSONObject; modifiedJSON: JSONObject | string | undefined; path: string}
+  {originalString, originalJSON, modifiedJSON, path, filename}: 
+  {originalString: string; originalJSON: JSONObject; modifiedJSON: JSONObject | string | undefined; path: string, filename: string}
 ): void => {
   if (originalString) {
     downloadFile(JSON.stringify(modifiedJSON), 'json_string.txt');
@@ -34,7 +34,7 @@ const handleDownloadJSONFile = (
       }
       return obj[pathName]
     }, originalJSON);
-    downloadFile(originalJSON);
+    downloadFile(originalJSON, filename ? filename : undefined);
   }
 }
 
@@ -45,6 +45,7 @@ const App: React.FC = () => {
   const [output, setOutput] = useState<JSONObject | string>();
   const [error, setError] = useState<ParseError | null | string>();
   const [input, setInput] = useState<JSONObject | string>();
+  const [fileName, setFileName] = useState<string>('');
 
   const handleJSONChange = (value: string | JSONObject | null, error: string | ParseError | null, type: 'input' | 'output') => {
     if (type === 'input') {
@@ -70,7 +71,7 @@ const App: React.FC = () => {
     const file = e && ((e.target as HTMLInputElement).files as FileList)[0];
     if (file) {
       const fileReader = new FileReader();
-      fileReader.onloadend = (e) => {
+      fileReader.onloadend = () => {
         const content = fileReader.result as string;
 
         try {
@@ -81,6 +82,8 @@ const App: React.FC = () => {
           alert('The uploaded JSON file is invalid.')
         }
       }
+
+      setFileName(file.name);
       fileReader.readAsText(file);
     }
   }
@@ -99,7 +102,7 @@ const App: React.FC = () => {
         <label htmlFor="file_upload" className="btn-action" data-test-id="btn-upload">Upload</label>
         <label className="btn-action" data-test-id="btn-download"
           onClick={() => !error 
-            ? handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString})
+            ? handleDownloadJSONFile({originalString: validJSONString, originalJSON: validJSON, modifiedJSON: output, path: pathToJsonString, filename: fileName})
             : alert('The input JSON is invalid and cannot be downloaded.')
           }
         >
